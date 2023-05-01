@@ -32,16 +32,12 @@ class Game:
                         self.game_over = True
                     elif event.key == pygame.K_UP:
                         self.board.move('up')
-                        self.check_game_over()
                     elif event.key == pygame.K_DOWN:
                         self.board.move('down')
-                        self.check_game_over()
                     elif event.key == pygame.K_LEFT:
                         self.board.move('left')
-                        self.check_game_over()
                     elif event.key == pygame.K_RIGHT:
                         self.board.move('right')
-                        self.check_game_over()
                     elif event.key == pygame.K_r:
                         self.board.new_game()
 
@@ -51,17 +47,3 @@ class Game:
             self.clock.tick(60)
 
         pygame.quit()
-
-    def check_game_over(self):
-        if self.board.check_game():
-            self.screen.fill((255, 255, 255))
-            self.board.draw_tip(self.screen)
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_r:
-                            self.board.new_game()
-                            return
-                        elif event.key == pygame.K_ESCAPE:
-                            self.game_over = True
-                            return

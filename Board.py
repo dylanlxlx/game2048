@@ -34,9 +34,6 @@ class Board:
         if empty_pos:
             row, col = empty_pos
             self.cells[row][col] = random_val
-        # else:
-        #     # 游戏结束
-        #     self.check_game = True
 
     def get_random_empty_cell(self):
         # 获取一个随机的空格子位置
@@ -148,6 +145,7 @@ class Board:
                     text_rect = text.get_rect(center=(x + width / 2, y + height / 2))
                     surface.blit(text, text_rect)
 
+
     def draw_tip(self, surface):
         tip_bg_color = (42, 194, 210)
         tip_color = (0, 0, 0)
@@ -160,10 +158,3 @@ class Board:
         t = "The game is over. please press 'R' to play again, or press 'esc' to exit the game"
         text_rect = pygame.Rect(tip_x, tip_y, tip_width, tip_height)
         draw_text(surface, t, tip_color, text_rect, font, aa=True)
-
-    def check_game(self):
-        empty_block = self.get_random_empty_cell()
-        if empty_block is None:
-            return True
-        else:
-            return False
