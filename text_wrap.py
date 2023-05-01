@@ -77,4 +77,4 @@ def draw_text(surface, text, color, rect, font, align=textAlignCenter, aa=False,
 #     draw_text(window, msg, (0, 0, 0), textRect, font, textAlignCenter, True)
 #     pygame.display.flip()
 
-# 参考
+# 参考代码
