@@ -1,3 +1,4 @@
+# Board类
 import random
 
 import pygame
