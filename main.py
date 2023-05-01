@@ -1,3 +1,4 @@
+# 运行程序
 import pygame
 from Game import Game
 
