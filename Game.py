@@ -43,6 +43,16 @@ class Game:
 
             self.screen.fill((255, 255, 255))
             self.board.draw(self.screen)
+            if self.board.cells_check:
+                self.board.draw_tip(self.screen)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.game_over = True
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.game_over = True
+                        elif event.key == pygame.K_r:
+                            self.board.new_game()
             pygame.display.flip()
             self.clock.tick(60)
 

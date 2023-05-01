@@ -8,9 +8,10 @@ from text_wrap import draw_text
 
 class Board:
     def __init__(self, screen_w, screen_h):
+        self.cells_check = False  # 所有block是否均被填满
         self.screen_w = screen_w  # 窗口宽度
         self.screen_h = screen_h  # 窗口高度
-        self.rows = self.cols = 2
+        self.rows = self.cols = 4  # block行列个数
         self.cells = [[0] * self.cols for _ in range(self.rows)]
         self.block_size = (min(self.screen_w, self.screen_h) / self.rows)
         self.block_margin = (min(self.screen_w, self.screen_h) / self.rows) * 0.1
@@ -23,6 +24,7 @@ class Board:
         self.add_block()
 
     def new_game(self):
+        self.cells_check = False
         self.cells = [[0] * self.cols for _ in range(self.rows)]
         self.add_block()
         self.add_block()
@@ -31,9 +33,11 @@ class Board:
         # 生成一个新方块，数值为2或4
         random_val = random.choice([2, 4])
         empty_pos = self.get_random_empty_cell()
-        if empty_pos:
+        if empty_pos is not None:
             row, col = empty_pos
             self.cells[row][col] = random_val
+        else:
+            self.cells_check = True
 
     def get_random_empty_cell(self):
         # 获取一个随机的空格子位置
@@ -144,7 +148,6 @@ class Board:
                     text = font.render(str(val), True, self.text_color)
                     text_rect = text.get_rect(center=(x + width / 2, y + height / 2))
                     surface.blit(text, text_rect)
-
 
     def draw_tip(self, surface):
         tip_bg_color = (42, 194, 210)
