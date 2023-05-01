@@ -1,3 +1,4 @@
+# Game类
 import pygame
 
 from Board import Board
