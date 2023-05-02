@@ -5,15 +5,15 @@ from Board import Board
 
 
 class Game:
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width):
         self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_height = screen_width * 1.3
         self.game_over = False
 
         # 初始化 Pygame
         pygame.init()
 
-        self.board = Board(self.screen_width, self.screen_height)
+        self.board = Board(self.screen_width)
         self.game_over = False
         self.game_failed = False
         # 创建 Pygame 窗口
@@ -32,13 +32,17 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         self.game_over = True
                     elif event.key == pygame.K_UP:
-                        self.board.move('up')
+                        if not self.board.cells_check:
+                            self.board.move('up')
                     elif event.key == pygame.K_DOWN:
-                        self.board.move('down')
+                        if not self.board.cells_check:
+                            self.board.move('down')
                     elif event.key == pygame.K_LEFT:
-                        self.board.move('left')
+                        if not self.board.cells_check:
+                            self.board.move('left')
                     elif event.key == pygame.K_RIGHT:
-                        self.board.move('right')
+                        if not self.board.cells_check:
+                            self.board.move('right')
                     elif event.key == pygame.K_r:
                         self.board.new_game()
 
@@ -54,6 +58,8 @@ class Game:
                             self.game_over = True
                         elif event.key == pygame.K_r:
                             self.board.new_game()
+                        else:
+                            continue
             pygame.display.flip()
             self.clock.tick(60)
 
