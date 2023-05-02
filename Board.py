@@ -8,10 +8,13 @@ from text_wrap import draw_text
 
 
 class Board:
-    def __init__(self, screen_w, screen_h):
+    def __init__(self, screen_w):
+        self.score = 0
+        self.current_score = 0
+        self.best_score = 0
         self.cells_check = False  # 所有block是否均被填满
         self.screen_w = screen_w  # 窗口宽度
-        self.screen_h = screen_h  # 窗口高度
+        self.screen_h = screen_w  # 窗口高度
         self.rows = self.cols = 4  # block行列个数
         self.cells = [[0] * self.cols for _ in range(self.rows)]
         self.block_size = (min(self.screen_w, self.screen_h) / self.rows)
@@ -26,6 +29,7 @@ class Board:
 
     def new_game(self):
         self.cells_check = False
+        self.score = 0
         self.cells = [[0] * self.cols for _ in range(self.rows)]
         self.add_block()
         self.add_block()
@@ -68,6 +72,7 @@ class Board:
         elif direction == 'right':
             self.move_right()
             moved = True
+        self.best_score = max(self.best_score, self.score)
         if moved:
             self.add_block()
 
@@ -115,11 +120,11 @@ class Board:
             for col in range(len(lines)):
                 self.cells[row][self.cols - col - 1] = lines[col]
 
-    @staticmethod
-    def merge_cells(line):
+    def merge_cells(self, line):
         merged_line = []
         for i in range(1, len(line)):
             if line[i] == line[i - 1]:
+                self.score += line[i] * 2
                 line[i - 1] += line[i]
                 line[i] = 0
         for i in range(len(line)):
@@ -142,13 +147,32 @@ class Board:
                 width = height = self.block_size - self.block_margin * 2
 
                 # 绘制block
-                pygame.draw.rect(surface, color, (x, y, width, height))
+                pygame.draw.rect(surface, color, (x, y, width, height), border_radius=self.screen_w // 35)
                 if val != 0:
                     font_size = self.font_size if val < 100 else int(self.font_size * 0.7)
                     font = pygame.font.SysFont(self.font_name, font_size)
                     text = font.render(str(val), True, self.text_color)
                     text_rect = text.get_rect(center=(x + width / 2, y + height / 2))
                     surface.blit(text, text_rect)
+
+        # 绘制得分栏
+        score_block_width = self.screen_w - self.block_margin * 2
+        score_block_height = self.screen_h * 0.3 - self.block_margin * 2
+        score_block_x = self.block_margin
+        score_block_y = self.screen_h
+        size_para = (score_block_x, score_block_y, score_block_width, score_block_height)
+        score_bg_color = (255, 243, 176)
+        pygame.draw.rect(surface, score_bg_color, size_para, border_radius=self.screen_w // 35)
+
+        # 绘制得分
+        s_color = (0, 0, 0)
+        s_font = pygame.font.SysFont(self.font_name, self.font_size)
+        prefix = s_font.render("Score: ", True, s_color)
+        score = s_font.render(str(self.score), True, s_color)
+        s_rect = score.get_rect(
+            center=(score_block_x + score_block_width / 2, score_block_y + score_block_height * 2 / 3))
+        surface.blit(prefix, (score_block_x * 2, score_block_y))
+        surface.blit(score, s_rect)
 
     def draw_tip(self, surface):
         tip_bg_color = (42, 194, 210)
@@ -157,8 +181,11 @@ class Board:
         tip_height = self.screen_h * 0.4
         tip_x = self.screen_w * 0.15
         tip_y = self.screen_h * 0.2
-        pygame.draw.rect(surface, tip_bg_color, (tip_x, tip_y, tip_width, tip_height))
+        pygame.draw.rect(surface, tip_bg_color, (tip_x, tip_y, tip_width, tip_height), border_radius=30)
         font = pygame.font.SysFont(self.font_name, self.screen_w * 7 // 100)
-        t = "The game is over. please press 'R' to play again, or press 'esc' to exit the game"
+        if self.score < self.best_score:
+            t = f"Your score is: {self.score}. please press 'R' to play again, or press 'esc' to exit the game"
+        else:
+            t = f"New record score: {self.score} ! ! ! please press 'R' to play again, or press 'esc' to exit the game"
         text_rect = pygame.Rect(tip_x, tip_y, tip_width, tip_height)
         draw_text(surface, t, tip_color, text_rect, font, aa=True)
