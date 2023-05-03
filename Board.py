@@ -178,7 +178,7 @@ class Board:
         tip_bg_color = (42, 194, 210)
         tip_color = (0, 0, 0)
         tip_width = self.screen_w * 0.7
-        tip_height = self.screen_h * 0.4
+        tip_height = self.screen_h * 0.5
         tip_x = self.screen_w * 0.15
         tip_y = self.screen_h * 0.2
         pygame.draw.rect(surface, tip_bg_color, (tip_x, tip_y, tip_width, tip_height), border_radius=30)
@@ -187,5 +187,5 @@ class Board:
             t = f"Your score is: {self.score}. please press 'R' to play again, or press 'esc' to exit the game"
         else:
             t = f"New record score: {self.score} ! ! ! please press 'R' to play again, or press 'esc' to exit the game"
-        text_rect = pygame.Rect(tip_x, tip_y, tip_width, tip_height)
+        text_rect = pygame.Rect(tip_x, tip_y * 1.1, tip_width, tip_height)
         draw_text(surface, t, tip_color, text_rect, font, aa=True)
